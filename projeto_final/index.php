@@ -1,5 +1,5 @@
 <?php
-// index.php
+
 require_once __DIR__ . '/conexao.php';
 if (!isset($_SESSION)) session_start();
 
