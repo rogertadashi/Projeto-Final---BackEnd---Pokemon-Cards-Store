@@ -91,35 +91,14 @@ $cartCount = array_sum($_SESSION['cart']);
 <meta charset="utf-8">
 <title>Loja de Cartas Pokémon</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<style>
- body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;margin:20px;background:#0b0b0b;color:#eaeaea}
- .header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
- .header-right a{color:#93c5fd;text-decoration:none;margin-left:10px}
- .topbar{display:flex;gap:12px;align-items:center;margin-bottom:18px}
- input[type=text]{padding:8px 10px;border:1px solid #333;background:#121212;color:#eee;border-radius:10px;min-width:280px}
- .btn{padding:8px 12px;border:0;border-radius:10px;cursor:pointer}
- .btn-cart{background:#1f2937;color:#fff}
- .btn-buy{background:#16a34a;color:#fff}
- .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
- .card{background:#111;border:1px solid #1f1f1f;border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:10px}
- .img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:12px;border:1px solid #1f1f1f;background:#0e0e0e}
- .muted{color:#bdbdbd;font-size:12px}
- .pill{display:inline-block;background:#1f2937;padding:2px 8px;border-radius:999px;font-size:12px;margin-right:6px}
- .price{font-weight:700}
- .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
- .qty{width:70px;padding:6px 8px;border-radius:8px;border:1px solid #333;background:#121212;color:#eee}
- .flash{background:#0f172a;border:1px solid #1e293b;padding:10px 12px;border-radius:10px;margin-bottom:14px}
- .pagination{display:flex;gap:6px;margin-top:16px}
- .pagination a,.pagination span{padding:6px 10px;background:#111;border:1px solid #1f1f1f;color:#ddd;border-radius:8px;text-decoration:none}
- .active{background:#2563eb;border-color:#1d4ed8}
-</style>
+<link rel="stylesheet" href="./style.css"/>
 </head>
 <body>
 <div class="header">
   <h1>🃏 Loja de Cartas Pokémon</h1>
   <div class="header-right">
     <a href="carrinho.php">🛒 Carrinho (<?= (int)$cartCount ?>)</a>
-    <a href="conectado.php">Dashboard</a>
+    <a href="relatorios/index.php">Dashboard</a>
     <a href="logout.php">Sair</a>
   </div>
 </div>

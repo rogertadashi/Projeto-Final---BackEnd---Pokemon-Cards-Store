@@ -58,3 +58,13 @@ CREATE TABLE itens_venda (
 INSERT INTO usuarios (nome, login, senha, funcao)
 VALUES ('Lider', 'elite4', 'admon123', 'Administrador');
 
+
+
+-- ====== TABELA FORNECEDORES (para 5º CRUD) ======
+CREATE TABLE IF NOT EXISTS fornecedores (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  nome VARCHAR(120) NOT NULL,
+  contato VARCHAR(120),
+  telefone VARCHAR(40),
+  email VARCHAR(120)
+);

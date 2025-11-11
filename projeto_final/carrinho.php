@@ -40,18 +40,9 @@ if($items){
 <!doctype html><html lang="pt-BR"><head>
 <meta charset="utf-8"><title>Carrinho</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<style>
- body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;margin:20px;background:#0b0b0b;color:#eaeaea}
- table{width:100%;border-collapse:collapse;background:#111;border:1px solid #1f1f1f;border-radius:12px;overflow:hidden}
- th,td{padding:10px;border-bottom:1px solid #1f1f1f} th{text-align:left;background:#0f0f0f}
- .actions{display:flex;gap:8px;align-items:center}.qty{width:70px;padding:6px 8px;border-radius:8px;border:1px solid #333;background:#121212;color:#eee}
- .row{display:flex;gap:8px;margin-top:14px}.btn{padding:8px 12px;border:0;border-radius:10px;cursor:pointer}
- .btn-gray{background:#1f2937;color:#fff}.btn-red{background:#ef4444;color:#fff}.btn-green{background:#16a34a;color:#fff}
- .right{display:flex;justify-content:flex-end}
-</style></head><body>
+<link rel="stylesheet" href="./style_2.css"/>
 <h1>Carrinho</h1>
 <p><a style="color:#93c5fd" href="index.php">← Continuar comprando</a></p>
-
 <?php if(!$rows): ?>
   <p>Seu carrinho está vazio.</p>
 <?php else: ?>

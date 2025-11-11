@@ -113,10 +113,8 @@ SELECT 1005, id, 1, valor FROM cartas WHERE codigo='PK007' LIMIT 1;
 
 COMMIT;
 
-
-
-
-
-
-
-
+-- Seeds de fornecedores
+INSERT INTO fornecedores (nome, contato, telefone, email) VALUES
+('Kanto Distribuidora', 'Professor Oak', '11 9999-0001', 'oak@kanto.example'),
+('Johto Trade', 'Professor Elm', '11 9999-0002', 'elm@johto.example')
+ON DUPLICATE KEY UPDATE nome=VALUES(nome);

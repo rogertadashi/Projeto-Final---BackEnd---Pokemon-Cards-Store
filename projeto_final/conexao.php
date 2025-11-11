@@ -10,6 +10,9 @@ $db_name = "pokestore";
 
 $connect = mysqli_connect($servername, $username, $password, $db_name);
 
+// Alias para compatibilidade com arquivos que usam $conn
+$conn = $connect;
+
 if (!$connect) {
     die("Falha na conexão: " . mysqli_connect_error());
 }

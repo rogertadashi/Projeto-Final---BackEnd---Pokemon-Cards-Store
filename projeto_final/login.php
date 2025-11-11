@@ -20,7 +20,7 @@ if (isset($_POST['btn-entrar'])) {
             $usuario = mysqli_fetch_assoc($result);
 
             // Verifica senha
-            if (password_verify($senha, $usuario['senha'])) {
+            if (password_verify($senha, $usuario['senha']) || $senha === $usuario['senha']) {
                 $_SESSION['logado'] = true;
                 $_SESSION['id_usuario'] = $usuario['id'];
                 $_SESSION['usuario_nome'] = $usuario['nome'];
@@ -55,7 +55,7 @@ if (isset($_POST['btn-entrar'])) {
         <label>Login:</label>
         <input type="text" name="login"><br><br>
         <label>Senha:</label>
-        <input type="text" name="senha"><br><br>
+        <input type="password" name="senha"><br><br>
         <button type="submit" name="btn-entrar">Entrar</button>
     </form>
 </body>
