@@ -39,7 +39,7 @@ if (isset($_POST['btn-entrar'])) {
 
 <!DOCTYPE html>
 <html lang="pt-br">
-
+<link rel="stylesheet" href="./style_2.css"/>
 <head>
     <meta charset="UTF-8">
     <title>Login PokéStore</title>
