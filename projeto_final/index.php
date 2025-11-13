@@ -105,14 +105,14 @@ if ($q !== '') {
   $s = $conn->prepare("SELECT id, codigo, nome, tipo, raridade, valor, imagem, estoque 
                        FROM cartas
                        WHERE (codigo LIKE ? OR nome LIKE ? OR tipo LIKE ? OR raridade LIKE ?)
-                       ORDER BY nome 
+                       ORDER BY codigo
                        LIMIT ? OFFSET ?");
   $s->bind_param('ssssii', $like, $like, $like, $like, $limit, $offset);
 } else {
   $total = (int)($conn->query("SELECT COUNT(*) total FROM cartas")->fetch_assoc()['total'] ?? 0);
   $s = $conn->prepare("SELECT id, codigo, nome, tipo, raridade, valor, imagem, estoque 
                        FROM cartas
-                       ORDER BY nome 
+                       ORDER BY codigo
                        LIMIT ? OFFSET ?");
   $s->bind_param('ii', $limit, $offset);
 }
