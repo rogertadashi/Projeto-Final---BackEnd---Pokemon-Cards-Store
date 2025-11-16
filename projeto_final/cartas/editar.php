@@ -2,23 +2,13 @@
 require_once("../conexao.php");
 require_once("../conectado.php");
 
-// =============================
-// Verifica permissão
-// =============================
 $funcao = $_SESSION['funcao'] ?? 'Cliente';
 if (!in_array($funcao, ['Administrador', 'Vendedor'])) {
-    die("<p style='color:red'>❌ Acesso negado. Apenas administradores e vendedores podem editar cartas.</p>");
+    die("<p style='color:red'> Acesso negado. Apenas administradores e vendedores podem editar cartas.</p>");
 }
 
-// =============================
-// Verifica ID
-// =============================
 $id = (int)($_GET['id'] ?? 0);
 if ($id <= 0) die("ID da carta inválido.");
-
-// =============================
-// Busca carta
-// =============================
 $stmt = $conn->prepare("SELECT * FROM cartas WHERE id = ?");
 $stmt->bind_param("i", $id);
 $stmt->execute();
@@ -26,13 +16,10 @@ $row = $stmt->get_result()->fetch_assoc();
 if (!$row) die("Carta não encontrada.");
 $stmt->close();
 
-// =============================
-// Atualiza carta
-// =============================
 $mensagem = "";
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nome = trim($_POST['nome']);
-    $imagem = trim($_POST['imagem']); // novo campo
+    $imagem = trim($_POST['imagem']);
     $tipo = $_POST['tipo'];
     $raridade = $_POST['raridade'];
     $valor = str_replace(',', '.', $_POST['valor']);
@@ -42,8 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->bind_param("ssssdis", $nome, $imagem, $tipo, $raridade, $valor, $estoque, $id);
 
     if ($stmt->execute()) {
-        $mensagem = "<p style='color:limegreen;'>✅ Carta atualizada com sucesso!</p>";
-        // Atualiza $row para exibir valores atualizados no formulário
+        $mensagem = "<p style='color:limegreen;'>Carta atualizada com sucesso!</p>";
         $row['nome'] = $nome;
         $row['imagem'] = $imagem;
         $row['tipo'] = $tipo;
@@ -176,7 +162,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <label>Estoque:</label>
         <input type="number" name="estoque" value="<?= (int)$row['estoque'] ?>" required>
 
-        <button type="submit">💾 Salvar Alterações</button>
+        <button type="submit">Salvar Alterações</button>
     </form>
 </body>
 

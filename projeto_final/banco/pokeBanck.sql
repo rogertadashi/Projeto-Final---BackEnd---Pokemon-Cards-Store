@@ -1,15 +1,10 @@
--- ==========================================
--- 🧩 CRIAÇÃO DO BANCO DE DADOS POKESTORE
--- ==========================================
 CREATE DATABASE IF NOT EXISTS pokestore
   CHARACTER SET utf8mb4
   COLLATE utf8mb4_general_ci;
 
 USE pokestore;
 
--- ==========================================
--- 👤 TABELA DE USUÁRIOS (ADMIN / VENDEDOR)
--- ==========================================
+-- Table Usuários (Admin/Vendedor):
 CREATE TABLE IF NOT EXISTS usuarios (
   id INT AUTO_INCREMENT PRIMARY KEY,
   nome VARCHAR(100) NOT NULL,
@@ -19,9 +14,7 @@ CREATE TABLE IF NOT EXISTS usuarios (
   criado_em DATETIME DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- ==========================================
--- 🧍‍♀️ TABELA DE CLIENTES (quem compra)
--- ==========================================
+-- Table Clientes:
 CREATE TABLE IF NOT EXISTS clientes (
   id INT AUTO_INCREMENT PRIMARY KEY,
   nome VARCHAR(100) NOT NULL,

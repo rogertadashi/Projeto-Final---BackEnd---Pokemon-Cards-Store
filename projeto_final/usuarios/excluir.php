@@ -1,47 +1,140 @@
 <?php
 require_once("../conexao.php");
-require_once("../conectado.php"); // garante que o usuário está logado
+require_once("../conectado.php");
 
-// =============================
-//  Validação do ID
-// =============================
-$id = intval($_GET['id'] ?? 0);
+$funcao = $_SESSION['funcao'] ?? 'Cliente';
+if ($funcao !== 'Administrador') {
+    $_SESSION['flash'] = 'Apenas administradores podem excluir usuários.';
+    header('Location: listar.php');
+    exit;
+}
+
+$id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+$mensagem = '';
+$erro = '';
 
 if ($id <= 0) {
-    die("<p style='color:red'>ID inválido.</p>");
-}
-
-// Impede o usuário de deletar a si mesmo
-$idUsuarioLogado = $_SESSION['id_usuario'] ?? 0;
-if ($id === $idUsuarioLogado) {
-    die("<p style='color:orange'>⚠️ Você não pode excluir o próprio usuário logado!</p>");
-}
-
-// =============================
-//  Verifica se o usuário existe
-// =============================
-$stmt = mysqli_prepare($conn, "SELECT nome FROM usuarios WHERE id = ?");
-mysqli_stmt_bind_param($stmt, "i", $id);
-mysqli_stmt_execute($stmt);
-$result = mysqli_stmt_get_result($stmt);
-$usuario = mysqli_fetch_assoc($result);
-mysqli_stmt_close($stmt);
-
-if (!$usuario) {
-    die("<p style='color:red'>Usuário não encontrado.</p>");
-}
-
-// =============================
-//  Exclui o usuário
-// =============================
-$stmt = mysqli_prepare($conn, "DELETE FROM usuarios WHERE id = ?");
-mysqli_stmt_bind_param($stmt, "i", $id);
-
-if (mysqli_stmt_execute($stmt)) {
-    echo "<p style='color:lightgreen'>✅ Usuário <strong>" . htmlspecialchars($usuario['nome']) . "</strong> excluído com sucesso!</p>";
-    header("Refresh: 2; URL=listar.php"); // redireciona após 2s
+    $erro = 'Usuário inválido.';
 } else {
-    echo "<p style='color:red'>Erro ao excluir: " . mysqli_error($conn) . "</p>";
-}
+    $stmt = $conn->prepare("SELECT nome FROM usuarios WHERE id = ?");
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
+    $res = $stmt->get_result();
+    $usuario = $res->fetch_assoc();
 
-mysqli_stmt_close($stmt);
+    if (!$usuario) {
+        $erro = 'Usuário não encontrado.';
+    } else {
+        $nomeUsuario = $usuario['nome'];
+        $del = $conn->prepare("DELETE FROM usuarios WHERE id = ?");
+        $del->bind_param("i", $id);
+
+        if ($del->execute()) {
+            $mensagem = "Usuário <strong>" . htmlspecialchars($nomeUsuario) . "</strong> excluído com sucesso!";
+        } else {
+            $erro = 'Erro ao excluir usuário. Tente novamente.';
+        }
+    }
+}
+?>
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Excluir Usuário</title>
+    <style>
+        body {
+            font-family: system-ui, Arial;
+            background: #0b0b0b;
+            color: #eaeaea;
+            margin: 20px;
+        }
+
+        .card {
+            max-width: 520px;
+            margin-top: 20px;
+            padding: 20px 24px;
+            background: #111;
+            border-radius: 10px;
+            box-shadow: 0 0 0 1px #222;
+        }
+
+        h2 {
+            margin-top: 0;
+            margin-bottom: 16px;
+        }
+
+        .msg-ok {
+            padding: 10px 12px;
+            border-radius: 6px;
+            background: #022c22;
+            border: 1px solid #16a34a;
+            color: #bbf7d0;
+            margin-bottom: 12px;
+            font-size: 0.95rem;
+        }
+
+        .msg-erro {
+            padding: 10px 12px;
+            border-radius: 6px;
+            background: #3b0d0d;
+            border: 1px solid #f97373;
+            color: #fecaca;
+            margin-bottom: 12px;
+            font-size: 0.95rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 8px 14px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .btn-back {
+            background: #2563eb;
+            color: #fff;
+        }
+
+        .btn-back:hover {
+            background: #1d4ed8;
+        }
+
+        a {
+            color: #93c5fd;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <h2>Excluir Usuário</h2>
+
+        <?php if ($mensagem): ?>
+            <div class="msg-ok">
+                <?= $mensagem ?>
+            </div>
+        <?php endif; ?>
+
+        <?php if ($erro): ?>
+            <div class="msg-erro">
+                <?= $erro ?>
+            </div>
+        <?php endif; ?>
+
+        <p>
+            <a href="listar.php" class="btn btn-back">
+                ← Voltar para a lista de usuários
+            </a>
+        </p>
+    </div>
+
+</body>
+</html>

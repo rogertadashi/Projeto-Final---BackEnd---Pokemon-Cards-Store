@@ -4,9 +4,6 @@ require_once("../conexao.php");
 $id = intval($_GET['id'] ?? 0);
 $mensagem = "";
 
-// ===============================
-//  Busca usuário para edição
-// ===============================
 $stmt = mysqli_prepare($conn, "SELECT id, nome, login, funcao FROM usuarios WHERE id = ?");
 mysqli_stmt_bind_param($stmt, "i", $id);
 mysqli_stmt_execute($stmt);
@@ -18,9 +15,6 @@ if (!$row) {
     die("<p style='color:red'>Usuário não encontrado!</p>");
 }
 
-// ===============================
-//  Atualiza dados
-// ===============================
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nome = trim($_POST['nome']);
     $login = trim($_POST['login']);
@@ -33,14 +27,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         mysqli_stmt_store_result($check);
 
         if (mysqli_stmt_num_rows($check) > 0) {
-            $mensagem = "<p style='color:orange'>❗ Já existe outro usuário com este login.</p>";
+            $mensagem = "<p style='color:orange'>Já existe outro usuário com este login.</p>";
         } else {
             $update = mysqli_prepare($conn, "UPDATE usuarios SET nome = ?, login = ?, funcao = ? WHERE id = ?");
             mysqli_stmt_bind_param($update, "sssi", $nome, $login, $funcao, $id);
 
             if (mysqli_stmt_execute($update)) {
-                $mensagem = "<p style='color:lightgreen'>✅ Dados atualizados com sucesso!</p>";
-                header("Refresh: 2; URL=listar.php"); // Redireciona após 2s
+                $mensagem = "<p style='color:lightgreen'>Dados atualizados com sucesso!</p>";
+                header("Refresh: 2; URL=listar.php");
             } else {
                 $mensagem = "<p style='color:red'>Erro ao atualizar: " . mysqli_error($conn) . "</p>";
             }
@@ -49,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         mysqli_stmt_close($check);
     } else {
-        $mensagem = "<p style='color:yellow'>⚠️ Preencha todos os campos!</p>";
+        $mensagem = "<p style='color:yellow'>Preencha todos os campos!</p>";
     }
 }
 ?>

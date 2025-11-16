@@ -2,9 +2,6 @@
 require_once("../conexao.php");
 require_once("../conectado.php");
 
-// =============================
-// Permissões
-// =============================
 $funcao = $_SESSION['funcao'] ?? 'Cliente';
 if (!in_array($funcao, ['Administrador', 'Vendedor'], true)) {
     $_SESSION['flash'] = 'Você não tem permissão para editar clientes.';
@@ -12,9 +9,6 @@ if (!in_array($funcao, ['Administrador', 'Vendedor'], true)) {
     exit;
 }
 
-// =============================
-// Verifica ID
-// =============================
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 if ($id <= 0) {
     $_SESSION['flash'] = 'Cliente inválido.';
@@ -23,30 +17,24 @@ if ($id <= 0) {
 }
 
 $mensagem = "";
-
-// =============================
-// Se enviou o formulário, atualiza
-// =============================
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nome     = trim($_POST['nome']     ?? '');
     $login    = trim($_POST['login']    ?? '');
     $email    = trim($_POST['email']    ?? '');
     $telefone = trim($_POST['telefone'] ?? '');
     $cpf      = trim($_POST['cpf']      ?? '');
-    $senha    = trim($_POST['senha']    ?? ''); // nova senha (opcional)
+    $senha    = trim($_POST['senha']    ?? ''); 
 
     if ($nome === '' || $login === '') {
         $mensagem = '<p class="erro">Nome e login são obrigatórios.</p>';
     } else {
         if ($senha !== '') {
-            // Atualiza também a senha
             $sql = "UPDATE clientes
                        SET nome = ?, login = ?, email = ?, telefone = ?, cpf = ?, senha = ?
                      WHERE id = ?";
             $stmt = $conn->prepare($sql);
             $stmt->bind_param("ssssssi", $nome, $login, $email, $telefone, $cpf, $senha, $id);
         } else {
-            // Mantém a senha atual
             $sql = "UPDATE clientes
                        SET nome = ?, login = ?, email = ?, telefone = ?, cpf = ?
                      WHERE id = ?";
@@ -64,9 +52,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// =============================
-// Busca dados do cliente para preencher o formulário
-// =============================
 $stmt = $conn->prepare("SELECT * FROM clientes WHERE id = ?");
 $stmt->bind_param("i", $id);
 $stmt->execute();

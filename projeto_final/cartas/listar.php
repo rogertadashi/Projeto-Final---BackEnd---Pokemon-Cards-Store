@@ -2,16 +2,10 @@
 require_once("../conexao.php");
 require_once("../conectado.php");
 
-// =============================
-// Permissões
-// =============================
 $funcao      = $_SESSION['funcao'] ?? 'Cliente';
 $podeEditar  = in_array($funcao, ['Administrador', 'Vendedor'], true);
 $podeExcluir = in_array($funcao, ['Administrador', 'Vendedor'], true);
 
-// =============================
-// Busca cartas
-// =============================
 $result = mysqli_query($conn, "SELECT * FROM cartas ORDER BY codigo ASC");
 ?>
 
@@ -137,6 +131,5 @@ $result = mysqli_query($conn, "SELECT * FROM cartas ORDER BY codigo ASC");
         <?php endwhile; ?>
         </tbody>
     </table>
-
 </body>
 </html>

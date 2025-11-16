@@ -1,13 +1,8 @@
--- =========================================================
--- ⚙️ SCRIPT DE POPULAÇÃO DO BANCO pokestore
--- =========================================================
 USE pokestore;
 SET NAMES utf8mb4;
 START TRANSACTION;
 
--- =========================================================
--- 1️⃣ USUÁRIOS (Admin / Vendedor — controle de estoque)
--- =========================================================
+-- Usuários:
 INSERT INTO usuarios (nome, login, senha, funcao)
 VALUES 
   ('Líder',      'elite4',  'admon123', 'Administrador'),
@@ -18,23 +13,21 @@ ON DUPLICATE KEY UPDATE
   senha = VALUES(senha),
   funcao = VALUES(funcao);
 
--- =========================================================
--- 2️⃣ CLIENTES (quem faz as compras)
--- =========================================================
+
+-- Clientes:
 INSERT INTO clientes (nome, email, telefone, cpf, login, senha)
 VALUES
-('João Silva', 'joao@example.com', '(11) 90000-0001', '111.111.111-11', 'joaos', '123456'),
-('Maria Souza', 'maria@example.com', '(11) 90000-0002', '222.222.222-22', 'marias', '123456'),
-('Carlos Lima', 'carlos@example.com', '(11) 90000-0003', '333.333.333-33', 'carlosl', '123456'),
-('Ana Pereira', 'ana@example.com', '(11) 90000-0004', '444.444.444-44', 'anap', '123456'),
-('Bruno Costa', 'bruno@example.com', '(11) 90000-0005', '555.555.555-55', 'brunoc', '123456')
+('João', 'joao@example.com', '(11) 90000-0001', '111.111.111-11', 'joao1', '123456'),
+('Maria', 'maria@example.com', '(11) 90000-0002', '222.222.222-22', 'maria2', '123456'),
+('Carlos', 'carlos@example.com', '(11) 90000-0003', '333.333.333-33', 'carlos3', '123456'),
+('Ana', 'ana@example.com', '(11) 90000-0004', '444.444.444-44', 'ana4', '123456'),
+('Bruno', 'bruno@example.com', '(11) 90000-0005', '555.555.555-55', 'bruno5', '123456')
 ON DUPLICATE KEY UPDATE
   nome = VALUES(nome),
   telefone = VALUES(telefone);
 
--- =========================================================
--- 3️⃣ CARTAS (com estoque)
--- =========================================================
+
+-- Cartas Pokemon:
 INSERT INTO cartas (codigo, nome, tipo, raridade, valor, estoque, imagem)
 VALUES
   ('PK001','Bulbasaur',  'Planta',   'Comum',       26.90, 30, 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png'),
@@ -57,9 +50,8 @@ ON DUPLICATE KEY UPDATE
   imagem = VALUES(imagem);
 
 
--- =========================================================
--- 4️⃣ VENDAS (somente clientes)
--- =========================================================
+
+-- Vendas:
 INSERT INTO vendas (cliente_id, condicao_pagamento, valor_total)
 SELECT c.id, 'À vista', 99.70
   FROM clientes c WHERE c.nome='João Silva' LIMIT 1;
@@ -80,10 +72,9 @@ INSERT INTO vendas (cliente_id, condicao_pagamento, valor_total)
 SELECT c.id, 'Cartão de débito', 59.00
   FROM clientes c WHERE c.nome='Bruno Costa' LIMIT 1;
 
--- =========================================================
--- 5️⃣ ITENS DAS VENDAS + atualização de estoque
--- =========================================================
--- VENDA 1: 2× PK001 + 1× PK004
+
+--  Itens de Vendas Junto Com Atualização De Estoque:
+-- Venda 1: 2× PK001 + 1× PK004
 INSERT INTO itens_venda (venda_id, carta_id, quantidade, valor_unitario)
 SELECT v.id, c.id, 2, c.valor
   FROM vendas v JOIN cartas c
@@ -96,7 +87,7 @@ SELECT v.id, c.id, 1, c.valor
   WHERE v.valor_total=99.70 AND c.codigo='PK004' LIMIT 1;
 UPDATE cartas SET estoque = estoque - 1 WHERE codigo='PK004';
 
--- VENDA 2: 1× PK009 + 1× PK010
+-- Venda 2: 1× PK009 + 1× PK010
 INSERT INTO itens_venda (venda_id, carta_id, quantidade, valor_unitario)
 SELECT v.id, c.id, 1, c.valor
   FROM vendas v JOIN cartas c
@@ -109,7 +100,7 @@ SELECT v.id, c.id, 1, c.valor
   WHERE v.valor_total=129.80 AND c.codigo='PK010' LIMIT 1;
 UPDATE cartas SET estoque = estoque - 1 WHERE codigo='PK010';
 
--- VENDA 3: 3× PK005 + 1× PK006
+-- Venda 3: 3× PK005 + 1× PK006
 INSERT INTO itens_venda (venda_id, carta_id, quantidade, valor_unitario)
 SELECT v.id, c.id, 3, c.valor
   FROM vendas v JOIN cartas c
@@ -122,7 +113,7 @@ SELECT v.id, c.id, 1, c.valor
   WHERE v.valor_total=109.60 AND c.codigo='PK006' LIMIT 1;
 UPDATE cartas SET estoque = estoque - 1 WHERE codigo='PK006';
 
--- VENDA 4: 1× PK011 + 2× PK003
+-- Venda 4: 1× PK011 + 2× PK003
 INSERT INTO itens_venda (venda_id, carta_id, quantidade, valor_unitario)
 SELECT v.id, c.id, 1, c.valor
   FROM vendas v JOIN cartas c
@@ -135,7 +126,7 @@ SELECT v.id, c.id, 2, c.valor
   WHERE v.valor_total=203.70 AND c.codigo='PK003' LIMIT 1;
 UPDATE cartas SET estoque = estoque - 2 WHERE codigo='PK003';
 
--- VENDA 5: 1× PK002 + 1× PK007
+-- Venda 5: 1× PK002 + 1× PK007
 INSERT INTO itens_venda (venda_id, carta_id, quantidade, valor_unitario)
 SELECT v.id, c.id, 1, c.valor
   FROM vendas v JOIN cartas c

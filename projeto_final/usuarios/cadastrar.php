@@ -10,15 +10,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $funcao = $_POST['funcao'];
 
     if ($nome && $login && $senha && $funcao) {
-
-        // Verifica se login já existe
         $check = mysqli_prepare($conn, "SELECT id FROM usuarios WHERE login = ?");
         mysqli_stmt_bind_param($check, "s", $login);
         mysqli_stmt_execute($check);
         mysqli_stmt_store_result($check);
 
         if (mysqli_stmt_num_rows($check) > 0) {
-            $mensagem = "<p style='color:orange'>❗ Este login já está em uso.</p>";
+            $mensagem = "<p style='color:orange'>Este login já está em uso.</p>";
         } else {
             $senhaHash = password_hash($senha, PASSWORD_DEFAULT);
 
@@ -26,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             mysqli_stmt_bind_param($stmt, "ssss", $nome, $login, $senhaHash, $funcao);
 
             if (mysqli_stmt_execute($stmt)) {
-                $mensagem = "<p style='color:lightgreen'>✅ Usuário cadastrado com sucesso!</p>";
+                $mensagem = "<p style='color:lightgreen'>Usuário cadastrado com sucesso!</p>";
             } else {
                 $mensagem = "<p style='color:red'>Erro ao cadastrar: " . mysqli_error($conn) . "</p>";
             }
@@ -34,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         mysqli_stmt_close($check);
     } else {
-        $mensagem = "<p style='color:yellow'>⚠️ Preencha todos os campos!</p>";
+        $mensagem = "<p style='color:yellow'>Preencha todos os campos!</p>";
     }
 }
 ?>

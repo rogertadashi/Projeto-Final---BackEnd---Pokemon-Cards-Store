@@ -2,16 +2,10 @@
 require_once("../conexao.php");
 require_once("../conectado.php");
 
-// =============================
-// Permissões
-// =============================
 $funcao      = $_SESSION['funcao'] ?? 'Cliente';
 $podeEditar  = in_array($funcao, ['Administrador', 'Vendedor'], true);
 $podeExcluir = in_array($funcao, ['Administrador', 'Vendedor'], true);
 
-// =============================
-// Busca fornecedores
-// =============================
 $result = mysqli_query($conn, "SELECT * FROM fornecedores ORDER BY nome ASC");
 ?>
 

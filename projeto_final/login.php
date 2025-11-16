@@ -15,9 +15,6 @@ if (isset($_POST['btn-entrar'])) {
         $erro = "Por favor, preencha todos os campos.";
     } else {
 
-        // ============================================
-        // 1️⃣ Tenta login como USUÁRIO (Admin/Vendedor)
-        // ============================================
         $sql_user = "SELECT * FROM usuarios WHERE login = ?";
         $stmt = mysqli_prepare($connect, $sql_user);
         mysqli_stmt_bind_param($stmt, "s", $login);
@@ -27,7 +24,6 @@ if (isset($_POST['btn-entrar'])) {
         if ($result_user && mysqli_num_rows($result_user) > 0) {
             $usuario = mysqli_fetch_assoc($result_user);
 
-            // Senhas podem ser armazenadas criptografadas OU simples (fase de testes)
             if (password_verify($senha, $usuario['senha']) || $senha === $usuario['senha']) {
                 $_SESSION['logado'] = true;
                 $_SESSION['tipo_usuario'] = 'usuario';
@@ -42,9 +38,6 @@ if (isset($_POST['btn-entrar'])) {
             }
         } else {
 
-            // ============================================
-            // 2️⃣ Tenta login como CLIENTE (novo modelo)
-            // ============================================
             $sql_cli = "SELECT * FROM clientes WHERE login = ? OR email = ? OR cpf = ?";
             $stmt2 = mysqli_prepare($connect, $sql_cli);
             mysqli_stmt_bind_param($stmt2, "sss", $login, $login, $login);
@@ -54,17 +47,14 @@ if (isset($_POST['btn-entrar'])) {
             if ($result_cli && mysqli_num_rows($result_cli) > 0) {
                 $cliente = mysqli_fetch_assoc($result_cli);
 
-                // Verifica senha (criptografada ou não)
                 $senhaCorreta = password_verify($senha, $cliente['senha']) || $senha === $cliente['senha'];
 
                 if ($senhaCorreta) {
                     $_SESSION['logado'] = true;
                     $_SESSION['tipo_usuario'] = 'cliente';
-                    $_SESSION['id_cliente'] = $cliente['id']; // ID real do cliente
+                    $_SESSION['id_cliente'] = $cliente['id']; 
                     $_SESSION['usuario_nome'] = $cliente['nome'];
                     $_SESSION['funcao'] = 'Cliente';
-
-                    // 🔹 compatibilidade com páginas que usam id_usuario
                     $_SESSION['id_usuario'] = $cliente['id'];
 
                     header("Location: index.php");
@@ -105,7 +95,6 @@ if (isset($_POST['btn-entrar'])) {
         <button type="submit" name="btn-entrar">Entrar</button>
     </form>
 
-    <!-- NOVO BOTÃO PARA CADASTRO DE CLIENTE -->
     <p style="margin-top:15px;">
         <a href="clientes/cadastrar.php" style="display:inline-block;padding:10px 20px;background:#2563eb;color:white;border-radius:6px;text-decoration:none;">
             Cadastre-se como Cliente

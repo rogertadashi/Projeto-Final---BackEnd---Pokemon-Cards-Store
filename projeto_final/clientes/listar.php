@@ -2,18 +2,11 @@
 require_once("../conexao.php");
 require_once("../conectado.php");
 
-// =============================
-// Permissões
-// =============================
 $funcao = $_SESSION['funcao'] ?? 'Cliente';
 
-// quem pode editar (Admin e Vendedor)
 $podeEditar  = in_array($funcao, ['Administrador', 'Vendedor'], true);
 $podeExcluir = in_array($funcao, ['Administrador', 'Vendedor'], true);
 
-// =============================
-// Busca clientes
-// =============================
 $result = mysqli_query($conn, "SELECT * FROM clientes ORDER BY nome ASC");
 ?>
 
@@ -136,6 +129,5 @@ $result = mysqli_query($conn, "SELECT * FROM clientes ORDER BY nome ASC");
         <?php endwhile; ?>
         </tbody>
     </table>
-
 </body>
 </html>

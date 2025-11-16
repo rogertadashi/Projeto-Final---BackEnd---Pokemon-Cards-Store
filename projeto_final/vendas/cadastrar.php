@@ -5,9 +5,6 @@ if (session_status() === PHP_SESSION_NONE) {
   session_start();
 }
 
-// =======================================
-// 🚫 Impede acesso de clientes comuns
-// =======================================
 $funcao = $_SESSION['funcao'] ?? 'Cliente';
 if (!in_array($funcao, ['Administrador', 'Vendedor'],true)) {
   $_SESSION['flash'] = 'Apenas administradores e vendedores podem registrar vendas.';
@@ -15,17 +12,11 @@ if (!in_array($funcao, ['Administrador', 'Vendedor'],true)) {
   exit;
 }
 
-// =======================================
-// 🛒 Verifica se há itens no carrinho
-// =======================================
 if (empty($_SESSION['cart'])) {
   header('Location: ../index.php');
   exit;
 }
 
-// =======================================
-// ⚙️ Configurações iniciais
-// =======================================
 $condicoes = ['À vista', 'Pix', 'Cartão de crédito', 'Cartão de débito', 'Parcelado'];
 
 $items = $_SESSION['cart'];
@@ -53,9 +44,6 @@ if ($ids) {
   }
 }
 
-// =======================================
-// 👥 Seleção de cliente
-// =======================================
 $clientes = [];
 $rc = $conn->query("SELECT id, nome FROM clientes ORDER BY nome");
 while ($c = $rc->fetch_assoc()) {
@@ -64,9 +52,6 @@ while ($c = $rc->fetch_assoc()) {
 
 $erro = $ok = null;
 
-// =======================================
-// 💾 Processamento do formulário
-// =======================================
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $clienteId = (int)($_POST['cliente_id'] ?? 0);
   $condicao = $_POST['condicao_pagamento'] ?? 'À vista';
@@ -84,7 +69,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $conn->begin_transaction();
     try {
-      // 🔹 Cria a venda
       $insVenda = $conn->prepare("
         INSERT INTO vendas (cliente_id, usuario_id, valor_total, condicao_pagamento)
         VALUES (?, ?, ?, ?)
@@ -92,8 +76,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $insVenda->bind_param('iids', $clienteId, $usuarioId, $total, $condicao);
       $insVenda->execute();
       $vendaId = $insVenda->insert_id;
-
-      // 🔹 Insere os itens e atualiza estoque
       $insItem = $conn->prepare("
         INSERT INTO itens_venda (venda_id, carta_id, quantidade, valor_unitario)
         VALUES (?, ?, ?, ?)
@@ -116,7 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       }
 
       $conn->commit();
-      $_SESSION['cart'] = []; // limpa carrinho
+      $_SESSION['cart'] = [];
       header("Location: visualizar.php?id=" . $vendaId);
       exit;
     } catch (Throwable $e) {

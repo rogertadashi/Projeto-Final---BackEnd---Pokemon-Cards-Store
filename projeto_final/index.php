@@ -5,20 +5,14 @@ if (session_status() === PHP_SESSION_NONE) {
   session_start();
 }
 
-// ======================================
-// 🔒 Verifica login
-// ======================================
 if (!isset($_SESSION['logado']) || $_SESSION['logado'] !== true) {
   header("Location: login.php");
   exit;
 }
 
 $id = $_SESSION['id_usuario'];
-$tipo = $_SESSION['tipo_usuario'] ?? 'usuario'; // 'usuario' ou 'cliente'
+$tipo = $_SESSION['tipo_usuario'] ?? 'usuario';
 
-// ======================================
-// 👤 Busca dados conforme tipo de usuário
-// ======================================
 if ($tipo === 'usuario') {
   $stmt = $conn->prepare("SELECT nome, funcao FROM usuarios WHERE id = ?");
   $stmt->bind_param("i", $id);
@@ -38,25 +32,16 @@ if (!$user) {
 $nomeUsuario = $user['nome'];
 $funcao = $user['funcao'];
 
-// ======================================
-// 🛒 Inicializa carrinho (somente clientes)
-// ======================================
 if ($tipo === 'cliente' && !isset($_SESSION['cart'])) {
   $_SESSION['cart'] = [];
 }
 
-// ======================================
-// 🔁 Função de redirecionamento
-// ======================================
 function go($u)
 {
   header("Location: $u");
   exit;
 }
 
-// ======================================
-// ➕ Adiciona carta ao carrinho (somente cliente)
-// ======================================
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $tipo === 'cliente') {
   $action = $_POST['action'] ?? '';
   $pid = (int)($_POST['product_id'] ?? 0);
@@ -86,10 +71,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $tipo === 'cliente') {
   $_SESSION['flash'] = "Adicionado ao carrinho: {$p['nome']} (x{$qty}).";
   go($_SERVER['PHP_SELF']);
 }
-
-// ======================================
-// 🔍 Busca e paginação das cartas
-// ======================================
 $q = trim($_GET['q'] ?? '');
 $page = max(1, (int)($_GET['page'] ?? 1));
 $limit = 12;
@@ -122,9 +103,6 @@ $res = $s->get_result();
 $pages = max(1, (int)ceil($total / $limit));
 $cartCount = array_sum($_SESSION['cart'] ?? []);
 
-// ======================================
-// ✅ Busca lista de clientes (somente admin)
-// ======================================
 $clientes = [];
 if ($funcao === 'Administrador') {
   $cli_res = $conn->query("SELECT id, nome, email, telefone, cpf FROM clientes ORDER BY nome ASC");
@@ -144,7 +122,6 @@ if ($funcao === 'Administrador') {
 </head>
 
 <body>
-  <!-- ======================== CABEÇALHO ======================== -->
   <div class="header">
     <h1>PokéStore</h1>
     <div class="header-right"> 
@@ -156,14 +133,14 @@ if ($funcao === 'Administrador') {
       </span>
 
       <?php if ($tipo === 'cliente'): ?>
-        <a href="carrinho.php">🛒 Carrinho (<?= (int)$cartCount ?>)</a>
+        <a href="carrinho.php">Carrinho (<?= (int)$cartCount ?>)</a>
         <a href="vendas/listar.php"> Histórico de Compras</a>
       <?php endif; ?>
       <?php if ($funcao === 'Administrador'): ?>
         <a href="usuarios/listar.php"> Usuários</a>
         <a href="cartas/listar.php"> Estoque</a>
         <a href="relatorios/index.php"> Relatórios</a>
-        <a href="clientes/listar.php"> Clientes</a> <!-- NOVO BOTÃO -->
+        <a href="clientes/listar.php"> Clientes</a>
       <?php elseif ($funcao === 'Vendedor'): ?>
         <a href="relatorios/index.php"> Relatórios</a>
         <a href="cartas/listar.php"> Estoque</a>
@@ -174,20 +151,16 @@ if ($funcao === 'Administrador') {
       <a href="logout.php"> Sair</a>
     </div>
   </div>
-
-  <!-- ======================== MENSAGEM DE FLASH ======================== -->
   <?php if (!empty($_SESSION['flash'])): ?>
     <div class="flash"><?= htmlspecialchars($_SESSION['flash']) ?></div>
     <?php unset($_SESSION['flash']); ?>
   <?php endif; ?>
 
-  <!-- ======================== BARRA DE BUSCA ======================== -->
   <form class="topbar" method="get" action="<?= htmlspecialchars($_SERVER['PHP_SELF']) ?>">
     <input type="text" name="q" value="<?= htmlspecialchars($q) ?>" placeholder="Buscar por código, nome, tipo ou raridade...">
     <button class="btn btn-cart" type="submit">Buscar</button>
   </form>
 
-  <!-- ======================== LISTA DE CARTAS ======================== -->
   <div class="grid">
     <?php while ($row = $res->fetch_assoc()): ?>
       <div class="card">
@@ -225,7 +198,6 @@ if ($funcao === 'Administrador') {
     <?php endwhile; ?>
   </div>
 
-  <!-- ======================== PAGINAÇÃO ======================== -->
   <?php if ($pages > 1): ?>
     <div class="pagination">
       <?php for ($p = 1; $p <= $pages; $p++): ?>

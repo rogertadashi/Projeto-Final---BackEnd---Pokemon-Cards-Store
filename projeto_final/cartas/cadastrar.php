@@ -2,30 +2,24 @@
 require_once("../conexao.php");
 require_once("../conectado.php");
 
-// =============================
-//  Verifica permissão
-// =============================
 $funcao = $_SESSION['funcao'] ?? 'Cliente';
 if (!in_array($funcao, ['Administrador', 'Vendedor'])) {
-    die("<p style='color:red'>❌ Acesso negado. Apenas administradores e vendedores podem cadastrar cartas.</p>");
+    die("<p style='color:red'> Acesso negado. Apenas administradores e vendedores podem cadastrar cartas.</p>");
 }
 
-// =============================
-//  Processa o cadastro
-// =============================
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $codigo = trim($_POST['codigo']);
     $nome = trim($_POST['nome']);
-    $imagem = trim($_POST['imagem']); // Novo campo
+    $imagem = trim($_POST['imagem']);
     $tipo = $_POST['tipo'];
     $raridade = $_POST['raridade'];
-    $valor = str_replace(',', '.', $_POST['valor']); // permite 12,50 ou 12.50
+    $valor = str_replace(',', '.', $_POST['valor']);
 
     $stmt = $conn->prepare("INSERT INTO cartas (codigo, nome, imagem, tipo, raridade, valor) VALUES (?, ?, ?, ?, ?, ?)");
     $stmt->bind_param("sssssd", $codigo, $nome, $imagem, $tipo, $raridade, $valor);
 
     if ($stmt->execute()) {
-        $mensagem = "<p style='color:limegreen;'>✅ Carta cadastrada com sucesso!</p>";
+        $mensagem = "<p style='color:limegreen;'>Carta cadastrada com sucesso!</p>";
     } else {
         $mensagem = "<p style='color:red;'>Erro ao cadastrar: " . htmlspecialchars($stmt->error) . "</p>";
     }

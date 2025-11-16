@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $senha = trim($_POST['senha']);
 
     if (!$nome || !$login || !$senha) {
-        $mensagem = "<p style='color:red;'>❌ Nome, login e senha são obrigatórios!</p>";
+        $mensagem = "<p style='color:red;'> Nome, login e senha são obrigatórios!</p>";
     } else {
         $senhaHash = password_hash($senha, PASSWORD_DEFAULT);
 
@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->bind_param("ssssss", $nome, $email, $telefone, $cpf, $login, $senhaHash);
 
         if ($stmt->execute()) {
-            $mensagem = "<p style='color:limegreen;'>✅ Cadastro realizado com sucesso! Redirecionando para o login...</p>";
+            $mensagem = "<p style='color:limegreen;'>Cadastro realizado com sucesso! Redirecionando para o login...</p>";
             $sucesso = true;
         } else {
             $mensagem = "<p style='color:red;'>Erro ao cadastrar: " . htmlspecialchars($stmt->error) . "</p>";
@@ -103,7 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <input type="text" name="telefone" placeholder="Telefone" maxlength="20">
         <input type="text" name="cpf" placeholder="CPF" maxlength="14">
         <input type="password" name="senha" placeholder="Senha" maxlength="255" required>
-        <button type="submit">💾 Cadastrar</button>
+        <button type="submit">Cadastrar</button>
     </form>
 
     <p style="margin-top:15px;">

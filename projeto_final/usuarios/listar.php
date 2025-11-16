@@ -2,12 +2,8 @@
 require_once("../conexao.php");
 require_once("../conectado.php");
 
-// =============================
-// Permissões
-// =============================
 $funcao = $_SESSION['funcao'] ?? 'Cliente';
 
-// só Administrador acessa essa tela
 if ($funcao !== 'Administrador') {
     $_SESSION['flash'] = 'Apenas administradores podem acessar a lista de usuários.';
     header('Location: ../index.php');
@@ -17,9 +13,6 @@ if ($funcao !== 'Administrador') {
 $podeEditar  = in_array($funcao, ['Administrador', 'Vendedor'], true);
 $podeExcluir = in_array($funcao, ['Administrador', 'Vendedor'], true);
 
-// =============================
-// Busca usuários
-// =============================
 $result = mysqli_query($conn, "SELECT * FROM usuarios ORDER BY nome ASC");
 ?>
 
