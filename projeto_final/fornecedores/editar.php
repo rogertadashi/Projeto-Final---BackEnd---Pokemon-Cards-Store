@@ -31,7 +31,53 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <meta charset="utf-8">
   <title>Editar Fornecedor</title>
 </head>
+<style>
+        body {
+            font-family: system-ui, Arial;
+            background: #0b0b0b;
+            color: #eaeaea;
+            margin: 20px;
+        }
 
+        h2 {
+            color: #93c5fd;
+        }
+
+        form {
+            background: #111;
+            padding: 20px;
+            border-radius: 10px;
+            width: 350px;
+            box-shadow: 0 0 10px #000;
+        }
+
+        input,
+        button {
+            display: block;
+            width: 100%;
+            margin: 10px 0;
+            padding: 8px;
+            border-radius: 6px;
+            border: 1px solid #333;
+            background: #1a1a1a;
+            color: #eaeaea;
+        }
+
+        input:focus {
+            border-color: #2563eb;
+            outline: none;
+        }
+
+        button {
+            background: #16a34a;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background: #15803d;
+        }
 <body>
   <h1>Editar Fornecedor</h1>
   <?php if ($erro) echo "<p style='color:red'>$erro</p>"; ?>

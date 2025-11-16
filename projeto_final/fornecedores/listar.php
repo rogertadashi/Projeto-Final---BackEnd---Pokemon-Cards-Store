@@ -1,64 +1,138 @@
 <?php
-require_once __DIR__ . '/../conexao.php';
-require_once __DIR__ . '/../conectado.php';
+require_once("../conexao.php");
+require_once("../conectado.php");
 
-$res = mysqli_query($connect, "SELECT * FROM fornecedores ORDER BY nome");
+// =============================
+// Permissões
+// =============================
+$funcao      = $_SESSION['funcao'] ?? 'Cliente';
+$podeEditar  = in_array($funcao, ['Administrador', 'Vendedor'], true);
+$podeExcluir = in_array($funcao, ['Administrador', 'Vendedor'], true);
+
+// =============================
+// Busca fornecedores
+// =============================
+$result = mysqli_query($conn, "SELECT * FROM fornecedores ORDER BY nome ASC");
 ?>
+
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
-  <meta charset="utf-8">
-  <title>Fornecedores - Listar</title>
-  <style>
-    body {
-      font-family: system-ui;
-      margin: 20px
-    }
+    <meta charset="UTF-8">
+    <title>Lista de Fornecedores</title>
+    <style>
+        body {
+            font-family: system-ui, Arial;
+            background: #0b0b0b;
+            color: #eaeaea;
+            margin: 20px;
+        }
 
-    table {
-      width: 100%;
-      border-collapse: collapse
-    }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            background: #111;
+            border-radius: 8px;
+            overflow: hidden;
+        }
 
-    th,
-    td {
-      border: 1px solid #ddd;
-      padding: 8px
-    }
-  </style>
+        th,
+        td {
+            border-bottom: 1px solid #222;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background: #161616;
+        }
+
+        a {
+            color: #93c5fd;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .btn-edit,
+        .btn-delete,
+        .btn-green {
+            padding: 6px 12px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            display: inline-block;
+            font-size: 0.9rem;
+        }
+
+        .btn-edit {
+            background: #2563eb;
+            color: #fff;
+        }
+
+        .btn-delete {
+            background: #dc2626;
+            color: #fff;
+        }
+
+        .btn-green {
+            background: #16a34a;
+            color: #fff;
+            margin-bottom: 12px;
+        }
+    </style>
 </head>
-
 <body>
-  <h1>Fornecedores</h1>
-  <p><a href="cadastrar.php">Novo</a> | <a href="../index.php">Início</a></p>
-  <table>
-    <thead>
-      <tr>
-        <th>#</th>
-        <th>Nome</th>
-        <th>Contato</th>
-        <th>Telefone</th>
-        <th>Email</th>
-        <th>Ações</th>
-      </tr>
-    </thead>
-    <tbody>
-      <?php while ($f = mysqli_fetch_assoc($res)): ?>
-        <tr>
-          <td><?= (int)$f['id'] ?></td>
-          <td><?= htmlspecialchars($f['nome']) ?></td>
-          <td><?= htmlspecialchars($f['contato']) ?></td>
-          <td><?= htmlspecialchars($f['telefone']) ?></td>
-          <td><?= htmlspecialchars($f['email']) ?></td>
-          <td>
-            <a href="editar.php?id=<?= (int)$f['id'] ?>">Editar</a> |
-            <a href="excluir.php?id=<?= (int)$f['id'] ?>" onclick="return confirm('Excluir fornecedor?');">Excluir</a>
-          </td>
-        </tr>
-      <?php endwhile; ?>
-    </tbody>
-  </table>
-</body>
 
+    <h2>Lista de Fornecedores</h2>
+
+    <?php if ($podeEditar): ?>
+        <p>
+            <a href="cadastrar.php" class="btn-green">
+                + Cadastrar Fornecedor
+            </a>
+        </p>
+    <?php endif; ?>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Email</th>
+                <th>Telefone</th>
+                <th>CNPJ</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+        <?php while ($row = mysqli_fetch_assoc($result)): ?>
+            <tr>
+                <td><?= (int)$row['id'] ?></td>
+                <td><?= htmlspecialchars($row['nome']) ?></td>
+                <td><?= htmlspecialchars($row['email']) ?></td>
+                <td><?= htmlspecialchars($row['telefone']) ?></td>
+                <td><?= htmlspecialchars($row['cnpj']) ?></td>
+                <td>
+                    <?php if ($podeEditar): ?>
+                        <a class="btn-edit" href="editar.php?id=<?= (int)$row['id'] ?>">Editar</a>
+                    <?php endif; ?>
+
+                    <?php if ($podeExcluir): ?>
+                        <?php if ($podeEditar): ?>&nbsp;<?php endif; ?>
+                        <a class="btn-delete"
+                           href="excluir.php?id=<?= (int)$row['id'] ?>"
+                           onclick="return confirm('Tem certeza que deseja excluir este fornecedor?');">
+                            Excluir
+                        </a>
+                    <?php endif; ?>
+                </td>
+            </tr>
+        <?php endwhile; ?>
+        </tbody>
+    </table>
+
+</body>
 </html>

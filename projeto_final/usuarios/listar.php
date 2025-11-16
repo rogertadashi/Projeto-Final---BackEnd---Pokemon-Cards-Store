@@ -3,59 +3,56 @@ require_once("../conexao.php");
 require_once("../conectado.php");
 
 // =============================
-//  Verifica permissão
+// Permissões
 // =============================
 $funcao = $_SESSION['funcao'] ?? 'Cliente';
+
+// só Administrador acessa essa tela
 if ($funcao !== 'Administrador') {
-    die("<p style='color:red'>❌ Acesso negado. Apenas administradores podem gerenciar usuários.</p>");
+    $_SESSION['flash'] = 'Apenas administradores podem acessar a lista de usuários.';
+    header('Location: ../index.php');
+    exit;
 }
 
-// =============================
-//  Consulta de usuários
-// =============================
-$sql = "SELECT id, nome, login, funcao FROM usuarios ORDER BY nome ASC";
-$result = mysqli_query($conn, $sql);
+$podeEditar  = in_array($funcao, ['Administrador', 'Vendedor'], true);
+$podeExcluir = in_array($funcao, ['Administrador', 'Vendedor'], true);
 
-if (!$result) {
-    die("<p style='color:red'>Erro ao buscar usuários: " . mysqli_error($conn) . "</p>");
-}
+// =============================
+// Busca usuários
+// =============================
+$result = mysqli_query($conn, "SELECT * FROM usuarios ORDER BY nome ASC");
 ?>
-<!DOCTYPE html>
-<html lang="pt-BR">
 
+<!DOCTYPE html>
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Usuários - Administração</title>
+    <title>Lista de Usuários</title>
     <style>
         body {
-            font-family: system-ui, Arial, sans-serif;
+            font-family: system-ui, Arial;
             background: #0b0b0b;
             color: #eaeaea;
             margin: 20px;
         }
 
-        h2 {
-            color: #93c5fd;
-        }
-
         table {
             border-collapse: collapse;
             width: 100%;
-            margin-top: 15px;
             background: #111;
-            border: 1px solid #1f1f1f;
             border-radius: 8px;
+            overflow: hidden;
         }
 
         th,
         td {
-            padding: 10px;
             border-bottom: 1px solid #222;
+            padding: 10px;
+            text-align: left;
         }
 
         th {
             background: #161616;
-            text-align: left;
         }
 
         a {
@@ -67,69 +64,79 @@ if (!$result) {
             text-decoration: underline;
         }
 
-        .btn {
-            background: #16a34a;
-            color: #fff;
-            padding: 6px 10px;
-            border-radius: 5px;
-            text-decoration: none;
+        .btn-edit,
+        .btn-delete,
+        .btn-green {
+            padding: 6px 12px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            display: inline-block;
             font-size: 0.9rem;
         }
 
-        .btn:hover {
-            background: #15803d;
+        .btn-edit {
+            background: #2563eb;
+            color: #fff;
         }
 
-        .danger {
+        .btn-delete {
             background: #dc2626;
+            color: #fff;
         }
 
-        .danger:hover {
-            background: #b91c1c;
+        .btn-green {
+            background: #16a34a;
+            color: #fff;
+            margin-bottom: 12px;
         }
     </style>
 </head>
-
 <body>
-    <h2>👤 Lista de Usuários</h2>
-    <a class="btn" href="cadastrar.php">➕ Novo Usuário</a>
-    <a class="btn" style="background:#2563eb;margin-left:10px" href="../index.php">🏠 Voltar</a>
+
+    <h2>Lista de Usuários</h2>
+
+    <p>
+        <a href="cadastrar.php" class="btn-green">
+            + Cadastrar Usuário
+        </a>
+    </p>
 
     <table>
         <thead>
             <tr>
                 <th>ID</th>
                 <th>Nome</th>
-                <th>Login</th>
+                <th>Usuário</th>
                 <th>Função</th>
-                <th style="width:150px;">Ações</th>
+                <th>Ações</th>
             </tr>
         </thead>
         <tbody>
-            <?php if (mysqli_num_rows($result) > 0): ?>
-                <?php while ($row = mysqli_fetch_assoc($result)): ?>
-                    <tr>
-                        <td><?= (int)$row['id'] ?></td>
-                        <td><?= htmlspecialchars($row['nome']) ?></td>
-                        <td><?= htmlspecialchars($row['login']) ?></td>
-                        <td><?= htmlspecialchars($row['funcao']) ?></td>
-                        <td>
-                            <a href="editar.php?id=<?= (int)$row['id'] ?>">✏️ Editar</a> |
-                            <a href="excluir.php?id=<?= (int)$row['id'] ?>"
-                                class="danger"
-                                onclick="return confirm('Tem certeza que deseja excluir o usuário <?= htmlspecialchars($row['nome']) ?>?');">
-                                🗑️ Excluir
-                            </a>
-                        </td>
-                    </tr>
-                <?php endwhile; ?>
-            <?php else: ?>
-                <tr>
-                    <td colspan="5" style="text-align:center;color:#aaa;">Nenhum usuário cadastrado.</td>
-                </tr>
-            <?php endif; ?>
+        <?php while ($row = mysqli_fetch_assoc($result)): ?>
+            <tr>
+                <td><?= (int)$row['id'] ?></td>
+                <td><?= htmlspecialchars($row['nome']) ?></td>
+                <td><?= htmlspecialchars($row['login']) ?></td>
+                <td><?= htmlspecialchars($row['funcao']) ?></td>
+                <td>
+                    <?php if ($podeEditar): ?>
+                        <a class="btn-edit" href="editar.php?id=<?= (int)$row['id'] ?>">Editar</a>
+                    <?php endif; ?>
+
+                    <?php if ($podeExcluir): ?>
+                        &nbsp;
+                        <a class="btn-delete"
+                           href="excluir.php?id=<?= (int)$row['id'] ?>"
+                           onclick="return confirm('Tem certeza que deseja excluir este usuário?');">
+                            Excluir
+                        </a>
+                    <?php endif; ?>
+                </td>
+            </tr>
+        <?php endwhile; ?>
         </tbody>
     </table>
-</body>
 
+</body>
 </html>

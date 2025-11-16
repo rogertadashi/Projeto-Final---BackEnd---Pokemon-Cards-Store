@@ -8,8 +8,8 @@ if (session_status() === PHP_SESSION_NONE) {
 // =======================================
 // 🚫 Impede acesso de clientes comuns
 // =======================================
-$funcao = $_SESSION['tipo_usuario'] ?? 'Cliente';
-if (!in_array($funcao, ['Administrador', 'Vendedor'])) {
+$funcao = $_SESSION['funcao'] ?? 'Cliente';
+if (!in_array($funcao, ['Administrador', 'Vendedor'],true)) {
   $_SESSION['flash'] = 'Apenas administradores e vendedores podem registrar vendas.';
   header('Location: ../index.php');
   exit;

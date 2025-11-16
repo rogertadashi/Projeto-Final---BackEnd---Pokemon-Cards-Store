@@ -16,7 +16,8 @@ function back()
 }
 
 $idUsuario = $_SESSION['id_usuario'] ?? 0;
-$tipoUsuario = $_SESSION['tipo_usuario'] ?? 'cliente'; // 'admin', 'vendedor', 'usuario', 'cliente'
+$tipoUsuario = $_SESSION['tipo_usuario'] ?? 'cliente';
+$funcao = $_SESSION['funcao'] ?? 'Cliente'; // 'admin', 'vendedor', 'usuario', 'cliente'
 
 // ==========================
 // 📦 Ações do carrinho
@@ -48,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   if ($action === 'checkout') {
     // Apenas admin ou vendedor podem registrar vendas
-    if ($tipoUsuario === 'Administrador' || $tipoUsuario === 'Vendedor') {
+    if (in_array($funcao , ['Administrador', 'Vendedor'],true)){
       header('Location: vendas/cadastrar.php');
       exit;
     } else {
@@ -154,7 +155,7 @@ if ($items) {
         <button class="btn btn-red" type="submit" name="action" value="clear">Limpar carrinho</button>
       </form>
 
-      <form method="post" action="index.php" style="margin-left:auto;">
+      <form method="post" action="carrinho.php" style="margin-left:auto;">
         <button class="btn btn-green" type="submit" name="action" value="checkout">Finalizar compra</button>
       </form>
     </div>

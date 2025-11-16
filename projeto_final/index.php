@@ -157,21 +157,21 @@ if ($funcao === 'Administrador') {
 
       <?php if ($tipo === 'cliente'): ?>
         <a href="carrinho.php">🛒 Carrinho (<?= (int)$cartCount ?>)</a>
-        <a href="vendas/listar.php">📜 Histórico de Compras</a>
+        <a href="vendas/listar.php"> Histórico de Compras</a>
       <?php endif; ?>
       <?php if ($funcao === 'Administrador'): ?>
-        <a href="usuarios/listar.php">👤 Usuários</a>
-        <a href="cartas/listar.php">📦 Estoque</a>
-        <a href="relatorios/index.php">📊 Relatórios</a>
-        <a href="clientes/listar.php">📋 Clientes</a> <!-- NOVO BOTÃO -->
+        <a href="usuarios/listar.php"> Usuários</a>
+        <a href="cartas/listar.php"> Estoque</a>
+        <a href="relatorios/index.php"> Relatórios</a>
+        <a href="clientes/listar.php"> Clientes</a> <!-- NOVO BOTÃO -->
       <?php elseif ($funcao === 'Vendedor'): ?>
-        <a href="relatorios/index.php">📈 Relatórios</a>
-        <a href="cartas/listar.php">📦 Estoque</a>
-        <a href="clientes/listar.php">📋 Clientes</a>
+        <a href="relatorios/index.php"> Relatórios</a>
+        <a href="cartas/listar.php"> Estoque</a>
+        <a href="clientes/listar.php"> Clientes</a>
       <?php endif; ?>
 
 
-      <a href="logout.php">🚪 Sair</a>
+      <a href="logout.php"> Sair</a>
     </div>
   </div>
 

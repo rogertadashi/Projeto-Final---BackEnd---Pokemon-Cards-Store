@@ -19,7 +19,7 @@ if (isset($_GET['csv'])) {
     echo $r['id'] . ';"' . str_replace('"', '""', $r['nome']) . '";' . $r['qtd'] . ';' . $r['faturamento'] . "\n";
   }
 }
-?>
+?>e
 <!DOCTYPE html>
 <html lang="pt-br">
 

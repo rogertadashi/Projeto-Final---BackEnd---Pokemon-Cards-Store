@@ -92,7 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 
 <body>
-    <h2>✨ Cadastro de Cliente</h2>
+    <h2> Cadastro de Cliente</h2>
 
     <?php if ($mensagem) echo $mensagem; ?>
 

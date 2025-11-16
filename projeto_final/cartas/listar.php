@@ -3,23 +3,23 @@ require_once("../conexao.php");
 require_once("../conectado.php");
 
 // =============================
-// Controle de acesso
+// Permissões
 // =============================
-$funcao = $_SESSION['funcao'] ?? 'Cliente';
-$permitido = in_array($funcao, ['Administrador', 'Vendedor']);
+$funcao      = $_SESSION['funcao'] ?? 'Cliente';
+$podeEditar  = in_array($funcao, ['Administrador', 'Vendedor'], true);
+$podeExcluir = in_array($funcao, ['Administrador', 'Vendedor'], true);
 
 // =============================
 // Busca cartas
 // =============================
-$result = mysqli_query($conn, "SELECT * FROM cartas ORDER BY nome ASC");
+$result = mysqli_query($conn, "SELECT * FROM cartas ORDER BY codigo ASC");
 ?>
 
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
     <meta charset="UTF-8">
-    <title>Lista de Cartas Pokémon</title>
+    <title>Lista de Cartas</title>
     <style>
         body {
             font-family: system-ui, Arial;
@@ -47,12 +47,6 @@ $result = mysqli_query($conn, "SELECT * FROM cartas ORDER BY nome ASC");
             background: #161616;
         }
 
-        img {
-            max-width: 60px;
-            height: auto;
-            border-radius: 4px;
-        }
-
         a {
             color: #93c5fd;
             text-decoration: none;
@@ -62,11 +56,15 @@ $result = mysqli_query($conn, "SELECT * FROM cartas ORDER BY nome ASC");
             text-decoration: underline;
         }
 
-        button {
+        .btn-edit,
+        .btn-delete,
+        .btn-green {
             padding: 6px 12px;
             border-radius: 6px;
             border: none;
             cursor: pointer;
+            display: inline-block;
+            font-size: 0.9rem;
         }
 
         .btn-edit {
@@ -78,53 +76,67 @@ $result = mysqli_query($conn, "SELECT * FROM cartas ORDER BY nome ASC");
             background: #dc2626;
             color: #fff;
         }
+
+        .btn-green {
+            background: #16a34a;
+            color: #fff;
+            margin-bottom: 12px;
+        }
     </style>
 </head>
-
 <body>
 
-    <h2>Lista de Cartas Pokémon</h2>
-    <?php if ($permitido): ?>
-        <p><a href="cadastrar.php">➕ Cadastrar nova carta</a></p>
+    <h2>Lista de Cartas</h2>
+
+    <?php if ($podeEditar): ?>
+        <p>
+            <a href="cadastrar.php" class="btn-green">
+                + Cadastrar Carta
+            </a>
+        </p>
     <?php endif; ?>
 
     <table>
-        <tr>
-            <th>ID</th>
-            <th>Imagem</th>
-            <th>Código</th>
-            <th>Nome</th>
-            <th>Tipo</th>
-            <th>Raridade</th>
-            <th>Valor</th>
-            <?php if ($permitido): ?><th>Ações</th><?php endif; ?>
-        </tr>
-
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Código</th>
+                <th>Nome</th>
+                <th>Tipo</th>
+                <th>Raridade</th>
+                <th>Valor</th>
+                <th>Estoque</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
         <?php while ($row = mysqli_fetch_assoc($result)): ?>
             <tr>
                 <td><?= (int)$row['id'] ?></td>
-                <td>
-                    <?php if (!empty($row['imagem'])): ?>
-                        <img src="<?= htmlspecialchars($row['imagem']) ?>" alt="<?= htmlspecialchars($row['nome']) ?>">
-                    <?php else: ?>
-                        -
-                    <?php endif; ?>
-                </td>
                 <td><?= htmlspecialchars($row['codigo']) ?></td>
                 <td><?= htmlspecialchars($row['nome']) ?></td>
                 <td><?= htmlspecialchars($row['tipo']) ?></td>
                 <td><?= htmlspecialchars($row['raridade']) ?></td>
                 <td>R$ <?= number_format((float)$row['valor'], 2, ',', '.') ?></td>
-                <?php if ($permitido): ?>
-                    <td>
+                <td><?= (int)$row['estoque'] ?></td>
+                <td>
+                    <?php if ($podeEditar): ?>
                         <a class="btn-edit" href="editar.php?id=<?= (int)$row['id'] ?>">Editar</a>
-                        <a class="btn-delete" href="excluir.php?id=<?= (int)$row['id'] ?>" onclick="return confirm('Excluir esta carta?');">Excluir</a>
-                    </td>
-                <?php endif; ?>
+                    <?php endif; ?>
+
+                    <?php if ($podeExcluir): ?>
+                        <?php if ($podeEditar): ?>&nbsp;<?php endif; ?>
+                        <a class="btn-delete"
+                           href="excluir.php?id=<?= (int)$row['id'] ?>"
+                           onclick="return confirm('Tem certeza que deseja excluir esta carta?');">
+                            Excluir
+                        </a>
+                    <?php endif; ?>
+                </td>
             </tr>
         <?php endwhile; ?>
+        </tbody>
     </table>
 
 </body>
-
 </html>
