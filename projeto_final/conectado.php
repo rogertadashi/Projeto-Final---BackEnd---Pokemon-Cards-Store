@@ -1,29 +1,17 @@
 <?php
 require_once 'conexao.php';
 
-// ==============================
-// 🧩 Garante que a sessão esteja ativa
-// ==============================
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// ==============================
-// 🔐 Verifica se o usuário está logado
-// ==============================
 if (empty($_SESSION['logado']) || $_SESSION['logado'] !== true) {
     header("Location: login.php");
     exit;
 }
 
-// ==============================
-// 🔍 Identifica o tipo de login
-// ==============================
 $tipo = $_SESSION['tipo_usuario'] ?? '';
 
-// ==============================
-// 👤 Busca os dados conforme o tipo
-// ==============================
 if ($tipo === 'usuario') {
     $id = $_SESSION['id_usuario'] ?? null;
 
@@ -58,7 +46,6 @@ if ($tipo === 'usuario') {
         exit;
     }
 } else {
-    // Tipo inválido (sessão corrompida)
     session_destroy();
     header("Location: login.php");
     exit;
