@@ -131,7 +131,7 @@ if ($id <= 0) {
 
         <p>
             <a href="listar.php" class="btn btn-back">
-                ← Voltar para a lista de fornecedores
+                Voltar para a lista de fornecedores
             </a>
         </p>
     </div>

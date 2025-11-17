@@ -5,7 +5,7 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Se não estiver logado → volta ao login
+// Se não estiver logado volta ao login
 if (!isset($_SESSION['id_usuario'])) {
     header("Location: login.php");
     exit;
@@ -20,7 +20,7 @@ if (empty($cart)) {
     exit;
 }
 
-// MÉTODO DE PAGAMENTO (padrão)
+// Metodo de pagamento (padrão)
 $condicao_pagamento = $_POST['condicao_pagamento'] ?? 'À vista';
 
 // Pagamentos válidos
@@ -141,7 +141,7 @@ try {
 </head>
 
 <body>
-    <h1>🎉 Compra Finalizada!</h1>
+    <h1>Compra Finalizada!</h1>
 
     <p>Obrigado pela sua compra! Seu pedido foi registrado com sucesso.</p>
 

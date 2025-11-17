@@ -129,7 +129,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <option value="Vendedor" <?= $row['funcao'] === 'Vendedor' ? 'selected' : '' ?>>Vendedor</option>
         </select>
         <button type="submit">Salvar Alterações</button>
-        <a href="listar.php">← Voltar</a>
+        <a href="listar.php">Voltar</a>
     </form>
 
     <div class="mensagem"><?= $mensagem ?></div>

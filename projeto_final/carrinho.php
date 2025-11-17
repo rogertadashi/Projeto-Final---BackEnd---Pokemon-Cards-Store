@@ -43,16 +43,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $_SESSION['cart'] = [];
     back();
   }
-  
+
   if ($action === 'checkout') {
 
-    // Se for CLIENTE → segue para o checkout normal
+    // Se for CLIENTE segue para o checkout normal
     if ($funcao === 'Cliente') {
       header('Location: finalizar_compra.php');
       exit;
     }
 
-    // Se for ADMIN ou VENDEDOR → abre o painel interno de vendas
+    // Se for ADMIN ou VENDEDOR abre o painel interno de vendas
     if (in_array($funcao, ['Administrador', 'Vendedor'], true)) {
       header('Location: vendas/cadastrar.php');
       exit;

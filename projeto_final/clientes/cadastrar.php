@@ -107,7 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </form>
 
     <p style="margin-top:15px;">
-        <a href="../login.php" style="color:#60a5fa;text-decoration:none;">⬅ Voltar para o Login</a>
+        <a href="../login.php" style="color:#60a5fa;text-decoration:none;"> Voltar para o Login</a>
     </p>
 </body>
 

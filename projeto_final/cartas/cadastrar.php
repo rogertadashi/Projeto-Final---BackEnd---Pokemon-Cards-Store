@@ -132,7 +132,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         <input type="number" name="valor" step="0.01" placeholder="Valor (R$)" required>
 
-        <button type="submit">💾 Cadastrar</button>
+        <button type="submit">Cadastrar</button>
     </form>
 </body>
 

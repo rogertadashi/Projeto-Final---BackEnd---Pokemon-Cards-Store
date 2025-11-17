@@ -26,9 +26,7 @@ CREATE TABLE IF NOT EXISTS clientes (
   data_cadastro DATETIME DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- ==========================================
--- 🃏 TABELA DE CARTAS (produtos)
--- ==========================================
+-- Tabela de cartas
 CREATE TABLE IF NOT EXISTS cartas (
   id INT AUTO_INCREMENT PRIMARY KEY,
   codigo VARCHAR(20) NOT NULL UNIQUE,
@@ -44,9 +42,7 @@ CREATE TABLE IF NOT EXISTS cartas (
   data_cadastro DATETIME DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- ==========================================
--- 💳 TABELA DE VENDAS (somente clientes)
--- ==========================================
+-- Tabela de vendas
 CREATE TABLE IF NOT EXISTS vendas (
   id INT AUTO_INCREMENT PRIMARY KEY,
   cliente_id INT NOT NULL,
@@ -56,9 +52,7 @@ CREATE TABLE IF NOT EXISTS vendas (
   FOREIGN KEY (cliente_id) REFERENCES clientes(id) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- ==========================================
--- 🧾 TABELA DE ITENS DA VENDA
--- ==========================================
+-- Tabela de itens de venda
 CREATE TABLE IF NOT EXISTS itens_venda (
   id INT AUTO_INCREMENT PRIMARY KEY,
   venda_id INT NOT NULL,
@@ -69,9 +63,7 @@ CREATE TABLE IF NOT EXISTS itens_venda (
   FOREIGN KEY (carta_id) REFERENCES cartas(id) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- ==========================================
--- 🏢 TABELA DE FORNECEDORES (controle interno)
--- ==========================================
+-- Tabela de fornecedores
 CREATE TABLE IF NOT EXISTS fornecedores (
   id INT AUTO_INCREMENT PRIMARY KEY,
   nome VARCHAR(120) NOT NULL,
@@ -81,9 +73,7 @@ CREATE TABLE IF NOT EXISTS fornecedores (
   data_cadastro DATETIME DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- ==========================================
--- 👑 INSERE USUÁRIO ADMINISTRADOR PADRÃO
--- ==========================================
+-- Insert nde usuario admin
 INSERT INTO usuarios (nome, login, senha, funcao)
 VALUES ('Líder', 'elite4', 'admon123', 'Administrador')
 ON DUPLICATE KEY UPDATE

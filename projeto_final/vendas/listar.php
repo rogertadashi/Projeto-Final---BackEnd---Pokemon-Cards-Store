@@ -2,15 +2,11 @@
 require_once __DIR__ . '/../conexao.php';
 require_once __DIR__ . '/../conectado.php';
 
-// =============================
-//  Controle de acesso
-// =============================
+//  Controle de acess
 $funcao = $_SESSION['funcao'] ?? 'Cliente';
 $idClienteLogado = $_SESSION['id_cliente'] ?? 0;
 
-// =============================
 //  Filtro de busca
-// =============================
 $q = trim($_GET['q'] ?? '');
 $where = "";
 $params = [];
@@ -37,9 +33,7 @@ if ($funcao === 'Cliente') {
   }
 }
 
-// =============================
 //  Query principal
-// =============================
 $sql = "SELECT v.id, v.data_venda, v.valor_total, v.condicao_pagamento,
                c.nome AS cliente
         FROM vendas v

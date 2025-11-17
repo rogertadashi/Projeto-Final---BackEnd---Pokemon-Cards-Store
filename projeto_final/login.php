@@ -52,7 +52,7 @@ if (isset($_POST['btn-entrar'])) {
                 if ($senhaCorreta) {
                     $_SESSION['logado'] = true;
                     $_SESSION['tipo_usuario'] = 'cliente';
-                    $_SESSION['id_cliente'] = $cliente['id']; 
+                    $_SESSION['id_cliente'] = $cliente['id'];
                     $_SESSION['usuario_nome'] = $cliente['nome'];
                     $_SESSION['funcao'] = 'Cliente';
                     $_SESSION['id_usuario'] = $cliente['id'];
@@ -100,7 +100,7 @@ if (isset($_POST['btn-entrar'])) {
             Cadastre-se como Cliente
         </a>
     </p>
-    </body>
+</body>
 
 
 </html>

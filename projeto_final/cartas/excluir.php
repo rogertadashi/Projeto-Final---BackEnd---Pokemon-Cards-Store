@@ -39,6 +39,7 @@ if ($id <= 0) {
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <title>Excluir Carta</title>
@@ -112,6 +113,7 @@ if ($id <= 0) {
         }
     </style>
 </head>
+
 <body>
 
     <div class="card">
@@ -119,7 +121,7 @@ if ($id <= 0) {
 
         <?php if ($mensagem): ?>
             <div class="msg-ok">
-                ✅ <?= $mensagem ?>
+                <?= $mensagem ?>
             </div>
         <?php endif; ?>
 
@@ -137,4 +139,5 @@ if ($id <= 0) {
     </div>
 
 </body>
+
 </html>

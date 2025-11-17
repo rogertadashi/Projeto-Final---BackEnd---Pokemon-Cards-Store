@@ -124,7 +124,7 @@ if ($funcao === 'Administrador') {
 <body>
   <div class="header">
     <h1>PokéStore</h1>
-    <div class="header-right"> 
+    <div class="header-right">
       <span>
         Olá, <?= htmlspecialchars($nomeUsuario) ?>
         <?php if ($tipo === 'usuario'): ?>
