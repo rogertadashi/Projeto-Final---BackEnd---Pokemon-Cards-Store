@@ -5,7 +5,6 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Se não estiver logado volta ao login
 if (!isset($_SESSION['id_usuario'])) {
     header("Location: login.php");
     exit;
@@ -20,10 +19,8 @@ if (empty($cart)) {
     exit;
 }
 
-// Metodo de pagamento (padrão)
 $condicao_pagamento = $_POST['condicao_pagamento'] ?? 'À vista';
 
-// Pagamentos válidos
 $pagamentosValidos = [
     'À vista',
     'Pix',
@@ -36,7 +33,6 @@ if (!in_array($condicao_pagamento, $pagamentosValidos, true)) {
     $condicao_pagamento = 'À vista';
 }
 
-// Buscar itens no banco
 $ids = implode(',', array_keys($cart));
 $query = $conn->query("SELECT id, nome, valor, estoque FROM cartas WHERE id IN ($ids)");
 
@@ -70,8 +66,6 @@ while ($row = $query->fetch_assoc()) {
 $conn->begin_transaction();
 
 try {
-
-    // 1) Criar venda
     $stmt = $conn->prepare("
         INSERT INTO vendas (cliente_id, valor_total, condicao_pagamento)
         VALUES (?, ?, ?)
@@ -86,7 +80,6 @@ try {
 
     $idVenda = $conn->insert_id;
 
-    // 2) Inserir itens
     $stmtItem = $conn->prepare("
         INSERT INTO itens_venda (venda_id, carta_id, quantidade, valor_unitario)
         VALUES (?, ?, ?, ?)
@@ -96,7 +89,6 @@ try {
         throw new Exception("Erro no prepare itens: " . $conn->error);
     }
 
-    // 3) Atualizar estoque
     $stmtEstoque = $conn->prepare("
         UPDATE cartas SET estoque = estoque - ? WHERE id = ?
     ");
@@ -116,10 +108,9 @@ try {
         $stmtEstoque->execute();
     }
 
-    // Finaliza transação
     $conn->commit();
 
-    unset($_SESSION['cart']); // limpa carrinho
+    unset($_SESSION['cart']);
 
 } catch (Exception $e) {
 
