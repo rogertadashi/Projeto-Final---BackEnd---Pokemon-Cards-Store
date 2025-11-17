@@ -19,9 +19,6 @@ $idUsuario = $_SESSION['id_usuario'] ?? 0;
 $tipoUsuario = $_SESSION['tipo_usuario'] ?? 'cliente';
 $funcao = $_SESSION['funcao'] ?? 'Cliente'; // 'admin', 'vendedor', 'usuario', 'cliente'
 
-// ==========================
-// 📦 Ações do carrinho
-// ==========================
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $action = $_POST['action'] ?? '';
 
@@ -46,22 +43,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $_SESSION['cart'] = [];
     back();
   }
-
+  
   if ($action === 'checkout') {
-    // Apenas admin ou vendedor podem registrar vendas
-    if (in_array($funcao , ['Administrador', 'Vendedor'],true)){
+
+    // Se for CLIENTE → segue para o checkout normal
+    if ($funcao === 'Cliente') {
+      header('Location: finalizar_compra.php');
+      exit;
+    }
+
+    // Se for ADMIN ou VENDEDOR → abre o painel interno de vendas
+    if (in_array($funcao, ['Administrador', 'Vendedor'], true)) {
       header('Location: vendas/cadastrar.php');
       exit;
-    } else {
-      $_SESSION['flash'] = 'Apenas administradores e vendedores podem finalizar compras.';
-      back();
     }
+
+    // Se for outro tipo inesperado
+    $_SESSION['flash'] = 'Tipo de usuário desconhecido. Contate o administrador.';
+    back();
   }
 }
 
-// ==========================
-// 🧾 Monta lista de produtos
-// ==========================
 $items = $_SESSION['cart'];
 $rows = [];
 $total = 0.0;
