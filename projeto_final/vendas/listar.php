@@ -2,18 +2,16 @@
 require_once __DIR__ . '/../conexao.php';
 require_once __DIR__ . '/../conectado.php';
 
-//  Controle de acess
 $funcao = $_SESSION['funcao'] ?? 'Cliente';
 $idClienteLogado = $_SESSION['id_cliente'] ?? 0;
 
-//  Filtro de busca
 $q = trim($_GET['q'] ?? '');
 $where = "";
 $params = [];
 $types = "";
 
 if ($funcao === 'Cliente') {
-  // Cliente vê apenas suas vendas
+
   $where = "WHERE v.cliente_id = ?";
   $params[] = $idClienteLogado;
   $types .= "i";
@@ -24,7 +22,7 @@ if ($funcao === 'Cliente') {
     $types .= "s";
   }
 } else {
-  // Admin / vendedor pode filtrar por nome do cliente ou condição de pagamento
+  
   if ($q !== '') {
     $where = "WHERE c.nome LIKE ? OR v.condicao_pagamento LIKE ?";
     $like = "%$q%";
@@ -33,7 +31,6 @@ if ($funcao === 'Cliente') {
   }
 }
 
-//  Query principal
 $sql = "SELECT v.id, v.data_venda, v.valor_total, v.condicao_pagamento,
                c.nome AS cliente
         FROM vendas v
