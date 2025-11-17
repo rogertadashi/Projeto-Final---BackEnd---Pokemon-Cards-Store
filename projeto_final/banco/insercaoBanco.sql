@@ -49,94 +49,82 @@ ON DUPLICATE KEY UPDATE
   estoque = VALUES(estoque),
   imagem = VALUES(imagem);
 
-
-
--- Vendas:
+-- Venda 1 - Cliente João
 INSERT INTO vendas (cliente_id, condicao_pagamento, valor_total)
-SELECT c.id, 'À vista', 99.70
-  FROM clientes c WHERE c.nome='João Silva' LIMIT 1;
+SELECT id, 'À vista', 83.70 FROM clientes WHERE nome='João' LIMIT 1;
 
+-- Venda 2 - Cliente Maria
 INSERT INTO vendas (cliente_id, condicao_pagamento, valor_total)
-SELECT c.id, 'Pix', 129.80
-  FROM clientes c WHERE c.nome='Maria Souza' LIMIT 1;
+SELECT id, 'Pix', 149.80 FROM clientes WHERE nome='Maria' LIMIT 1;
 
+-- Venda 3 - Cliente Carlos
 INSERT INTO vendas (cliente_id, condicao_pagamento, valor_total)
-SELECT c.id, 'Cartão de crédito', 109.60
-  FROM clientes c WHERE c.nome='Carlos Lima' LIMIT 1;
+SELECT id, 'Cartão de crédito', 299.60 FROM clientes WHERE nome='Carlos' LIMIT 1;
 
+-- Venda 4 - Cliente Ana
 INSERT INTO vendas (cliente_id, condicao_pagamento, valor_total)
-SELECT c.id, 'Parcelado', 203.70
-  FROM clientes c WHERE c.nome='Ana Pereira' LIMIT 1;
+SELECT id, 'Parcelado', 349.70 FROM clientes WHERE nome='Ana' LIMIT 1;
 
+-- Venda 5 - Cliente Bruno
 INSERT INTO vendas (cliente_id, condicao_pagamento, valor_total)
-SELECT c.id, 'Cartão de débito', 59.00
-  FROM clientes c WHERE c.nome='Bruno Costa' LIMIT 1;
+SELECT id, 'Cartão de débito', 72.50 FROM clientes WHERE nome='Bruno' LIMIT 1;
+
 
 
 --  Itens de Vendas Junto Com Atualização De Estoque:
--- Venda 1: 2× PK001 + 1× PK004
+-- Venda 1: 2× PK001 e 1× PK004
 INSERT INTO itens_venda (venda_id, carta_id, quantidade, valor_unitario)
-SELECT v.id, c.id, 2, c.valor
-  FROM vendas v JOIN cartas c
-  WHERE v.valor_total=99.70 AND c.codigo='PK001' LIMIT 1;
+SELECT (SELECT id FROM vendas ORDER BY id DESC LIMIT 1), id, 2, valor
+FROM cartas WHERE codigo='PK001' LIMIT 1;
 UPDATE cartas SET estoque = estoque - 2 WHERE codigo='PK001';
 
 INSERT INTO itens_venda (venda_id, carta_id, quantidade, valor_unitario)
-SELECT v.id, c.id, 1, c.valor
-  FROM vendas v JOIN cartas c
-  WHERE v.valor_total=99.70 AND c.codigo='PK004' LIMIT 1;
+SELECT (SELECT id FROM vendas ORDER BY id DESC LIMIT 1), id, 1, valor
+FROM cartas WHERE codigo='PK004' LIMIT 1;
 UPDATE cartas SET estoque = estoque - 1 WHERE codigo='PK004';
 
--- Venda 2: 1× PK009 + 1× PK010
+-- Venda 2: 1× PK009 e 1× PK010
 INSERT INTO itens_venda (venda_id, carta_id, quantidade, valor_unitario)
-SELECT v.id, c.id, 1, c.valor
-  FROM vendas v JOIN cartas c
-  WHERE v.valor_total=129.80 AND c.codigo='PK009' LIMIT 1;
+SELECT (SELECT id FROM vendas ORDER BY id DESC LIMIT 1), id, 1, valor
+FROM cartas WHERE codigo='PK009' LIMIT 1;
 UPDATE cartas SET estoque = estoque - 1 WHERE codigo='PK009';
 
 INSERT INTO itens_venda (venda_id, carta_id, quantidade, valor_unitario)
-SELECT v.id, c.id, 1, c.valor
-  FROM vendas v JOIN cartas c
-  WHERE v.valor_total=129.80 AND c.codigo='PK010' LIMIT 1;
+SELECT (SELECT id FROM vendas ORDER BY id DESC LIMIT 1), id, 1, valor
+FROM cartas WHERE codigo='PK010' LIMIT 1;
 UPDATE cartas SET estoque = estoque - 1 WHERE codigo='PK010';
 
--- Venda 3: 3× PK005 + 1× PK006
+-- Venda 3: 3× PK005 e 1× PK006
 INSERT INTO itens_venda (venda_id, carta_id, quantidade, valor_unitario)
-SELECT v.id, c.id, 3, c.valor
-  FROM vendas v JOIN cartas c
-  WHERE v.valor_total=109.60 AND c.codigo='PK005' LIMIT 1;
+SELECT (SELECT id FROM vendas ORDER BY id DESC LIMIT 1), id, 3, valor
+FROM cartas WHERE codigo='PK005' LIMIT 1;
 UPDATE cartas SET estoque = estoque - 3 WHERE codigo='PK005';
 
 INSERT INTO itens_venda (venda_id, carta_id, quantidade, valor_unitario)
-SELECT v.id, c.id, 1, c.valor
-  FROM vendas v JOIN cartas c
-  WHERE v.valor_total=109.60 AND c.codigo='PK006' LIMIT 1;
+SELECT (SELECT id FROM vendas ORDER BY id DESC LIMIT 1), id, 1, valor
+FROM cartas WHERE codigo='PK006' LIMIT 1;
 UPDATE cartas SET estoque = estoque - 1 WHERE codigo='PK006';
 
--- Venda 4: 1× PK011 + 2× PK003
+-- Venda 4: 1× PK011 e 2× PK003
 INSERT INTO itens_venda (venda_id, carta_id, quantidade, valor_unitario)
-SELECT v.id, c.id, 1, c.valor
-  FROM vendas v JOIN cartas c
-  WHERE v.valor_total=203.70 AND c.codigo='PK011' LIMIT 1;
+SELECT (SELECT id FROM vendas ORDER BY id DESC LIMIT 1), id, 1, valor
+FROM cartas WHERE codigo='PK011' LIMIT 1;
 UPDATE cartas SET estoque = estoque - 1 WHERE codigo='PK011';
 
 INSERT INTO itens_venda (venda_id, carta_id, quantidade, valor_unitario)
-SELECT v.id, c.id, 2, c.valor
-  FROM vendas v JOIN cartas c
-  WHERE v.valor_total=203.70 AND c.codigo='PK003' LIMIT 1;
+SELECT (SELECT id FROM vendas ORDER BY id DESC LIMIT 1), id, 2, valor
+FROM cartas WHERE codigo='PK003' LIMIT 1;
 UPDATE cartas SET estoque = estoque - 2 WHERE codigo='PK003';
 
--- Venda 5: 1× PK002 + 1× PK007
+-- Venda 5: 1× PK002 e 1× PK007
 INSERT INTO itens_venda (venda_id, carta_id, quantidade, valor_unitario)
-SELECT v.id, c.id, 1, c.valor
-  FROM vendas v JOIN cartas c
-  WHERE v.valor_total=59.00 AND c.codigo='PK002' LIMIT 1;
+SELECT (SELECT id FROM vendas ORDER BY id DESC LIMIT 1), id, 1, valor
+FROM cartas WHERE codigo='PK002' LIMIT 1;
 UPDATE cartas SET estoque = estoque - 1 WHERE codigo='PK002';
 
 INSERT INTO itens_venda (venda_id, carta_id, quantidade, valor_unitario)
-SELECT v.id, c.id, 1, c.valor
-  FROM vendas v JOIN cartas c
-  WHERE v.valor_total=59.00 AND c.codigo='PK007' LIMIT 1;
+SELECT (SELECT id FROM vendas ORDER BY id DESC LIMIT 1), id, 1, valor
+FROM cartas WHERE codigo='PK007' LIMIT 1;
 UPDATE cartas SET estoque = estoque - 1 WHERE codigo='PK007';
 
 COMMIT;
